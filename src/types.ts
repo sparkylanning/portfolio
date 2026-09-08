@@ -40,9 +40,9 @@ export interface PersonalItem {
 export interface SkillBubbleItem {
   id: string;
   name: string;
-  category: 'operations' | 'analytics' | 'finance' | 'soft-skills' | 'tools';
+  category: "operations" | "analytics" | "finance" | "soft-skills" | "tools";
   categoryLabel: string;
-  size: 'lg' | 'md' | 'sm';
+  size: "lg" | "md" | "sm";
   context: string;
 }
 

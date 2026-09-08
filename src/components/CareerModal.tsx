@@ -1,20 +1,20 @@
-import React, { useRef, useState } from 'react';
-import { CareerItem } from '../types';
-import { 
-  X, 
-  MapPin, 
-  Calendar, 
-  Briefcase, 
-  CheckCircle2, 
-  ChevronLeft, 
-  ChevronRight, 
+import React, { useRef, useState } from "react";
+import { CareerItem } from "../types";
+import {
+  X,
+  MapPin,
+  Calendar,
+  Briefcase,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Sparkles,
   ExternalLink,
   Camera,
-  Loader2
-} from 'lucide-react';
-import { optimizeImageFile } from '../utils/imageOptimizer';
-import { EditableText } from './EditableText';
+  Loader2,
+} from "lucide-react";
+import { optimizeImageFile } from "../utils/imageOptimizer";
+import { EditableText } from "./EditableText";
 
 interface CareerModalProps {
   item: CareerItem | null;
@@ -42,26 +42,29 @@ export const CareerModal: React.FC<CareerModalProps> = ({
 
   const currentIndex = allItems.findIndex((i) => i.id === item.id);
   const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
-  const nextItem = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
+  const nextItem =
+    currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
 
-  const handleQuickImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuickImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     if (e.target.files && e.target.files[0] && onUpdateImage) {
       try {
         setIsUploading(true);
         const res = await optimizeImageFile(e.target.files[0]);
         onUpdateImage(item.id, res.dataUrl);
       } catch (err) {
-        console.error('Quick image upload error:', err);
+        console.error("Quick image upload error:", err);
       } finally {
         setIsUploading(false);
-        if (fileInputRef.current) fileInputRef.current.value = '';
+        if (fileInputRef.current) fileInputRef.current.value = "";
       }
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
-      <div 
+      <div
         className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#FAF6EF] rounded-sm border border-[#1B4332]/30 shadow-2xl flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
@@ -83,7 +86,8 @@ export const CareerModal: React.FC<CareerModalProps> = ({
             <span>Career Milestone</span>
             <span className="text-[#1B4332]/40">•</span>
             <span className="text-[#4F6355]">
-              {String(currentIndex + 1).padStart(2, '0')} of {String(allItems.length).padStart(2, '0')}
+              {String(currentIndex + 1).padStart(2, "0")} of{" "}
+              {String(allItems.length).padStart(2, "0")}
             </span>
           </div>
 
@@ -124,7 +128,7 @@ export const CareerModal: React.FC<CareerModalProps> = ({
             className="w-full h-full object-cover opacity-90"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-          
+
           {/* Quick upload photo button on hero */}
           {onUpdateImage && (
             <button
@@ -225,7 +229,10 @@ export const CareerModal: React.FC<CareerModalProps> = ({
               </h4>
               <ul className="space-y-2">
                 {item.achievements.map((ach, aIdx) => (
-                  <li key={aIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#18221B]">
+                  <li
+                    key={aIdx}
+                    className="flex items-start gap-2.5 text-xs sm:text-sm text-[#18221B]"
+                  >
                     <CheckCircle2 className="w-4 h-4 text-[#1B4332] shrink-0 mt-0.5" />
                     <span>{ach}</span>
                   </li>

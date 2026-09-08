@@ -1,28 +1,27 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useMotionValue } from 'motion/react';
-import { CareerItem } from '../types';
-import { 
-  Briefcase, 
-  MapPin, 
-  Calendar, 
-  ChevronRight, 
-  ChevronLeft, 
-  ArrowRight, 
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useMotionValue } from "motion/react";
+import { CareerItem } from "../types";
+import {
+  Briefcase,
+  MapPin,
+  Calendar,
+  ChevronRight,
+  ChevronLeft,
+  ArrowRight,
   Sparkles,
   ExternalLink,
   ShieldCheck,
-  Building2
-} from 'lucide-react';
+  Building2,
+} from "lucide-react";
 
 interface CareerHorizontalSectionProps {
   items: CareerItem[];
   onSelectItem: (item: CareerItem) => void;
 }
 
-export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = ({
-  items,
-  onSelectItem,
-}) => {
+export const CareerHorizontalSection: React.FC<
+  CareerHorizontalSectionProps
+> = ({ items, onSelectItem }) => {
   const targetRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [scrollRange, setScrollRange] = useState<number>(0);
@@ -38,7 +37,7 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
   // Monitor scroll within the container
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ['start start', 'end end'],
+    offset: ["start start", "end end"],
   });
 
   // Calculate dynamic pixel transform based on actual track width and parent container
@@ -54,39 +53,21 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
     };
 
     updateScrollRange();
-    window.addEventListener('resize', updateScrollRange);
-    return () => window.removeEventListener('resize', updateScrollRange);
+    window.addEventListener("resize", updateScrollRange);
+    return () => window.removeEventListener("resize", updateScrollRange);
   }, [items]);
 
   // Track scroll changes:
   // When scrolling DOWN: standard smooth 1:1 progression across all cards.
   // When scrolling UP after having passed the section: accelerate horizontal scroll 2.5x so cards zip past quickly.
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
-      const currentY = window.scrollY;
-      const isScrollingUp = currentY < lastScrollYRef.current;
-      lastScrollYRef.current = currentY;
-
-      // Mark if user scrolled past the section
-      if (latest >= 0.94) {
-        hasPassedSectionRef.current = true;
-      } else if (latest <= 0.05) {
-        hasPassedSectionRef.current = false;
-      }
-
-      if (hasPassedSectionRef.current && isScrollingUp) {
-        // Scrolling UP after having passed: accelerate sideways motion so it finishes in the first ~35% of upward scroll
-        const acceleratedProgress = Math.max(0, Math.min(1, (latest - 0.65) / 0.35));
-        x.set(-acceleratedProgress * scrollRange);
-      } else {
-        // Normal smooth progression
-        x.set(-latest * scrollRange);
-      }
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      x.set(-latest * scrollRange);
 
       const normalized = Math.max(0, Math.min(1, latest));
       const step = Math.min(
         items.length - 1,
-        Math.floor(normalized * items.length)
+        Math.floor(normalized * items.length),
       );
       setActiveStep(step);
     });
@@ -100,7 +81,7 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
     const containerHeight = targetRef.current.offsetHeight - window.innerHeight;
     const targetProgress = index / Math.max(1, items.length - 1);
     const targetScroll = containerTop + targetProgress * containerHeight;
-    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    window.scrollTo({ top: targetScroll, behavior: "smooth" });
   };
 
   const handlePrev = () => {
@@ -114,15 +95,14 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
   };
 
   return (
-    <section 
-      id="career" 
-      ref={targetRef} 
+    <section
+      id="career"
+      ref={targetRef}
       className="relative bg-[#FAF6EF] border-t border-[#1B4332]/20"
-      style={{ height: `${(items.length + 1) * 26 + 30}vh` }}
+      style={{ height: `${(items.length + 1) * 150 + 30}vh` }}
     >
       {/* Full-viewport sticky deck: covers 100% of the screen seamlessly with no gaps */}
       <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden flex flex-col justify-between pt-16 sm:pt-20 pb-4 sm:pb-6 px-4 sm:px-8 md:px-12 lg:px-16 bg-[#FAF6EF] border-b border-[#1B4332]/20">
-        
         {/* Top Header Bar with Geometric Balance design header */}
         <div className="w-full max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-2.5 border-b border-[#1B4332]/15 shrink-0">
           <div>
@@ -139,7 +119,9 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
             {/* Scroll Indicator */}
             <div className="hidden lg:flex items-center gap-2 text-xs text-[#1B4332] font-semibold">
               <div className="h-[1px] w-10 bg-[#1B4332]" />
-              <span className="text-xs italic font-serif">Scroll down to advance horizontally &rarr;</span>
+              <span className="text-xs italic font-serif">
+                Scroll down to advance horizontally &rarr;
+              </span>
             </div>
 
             {/* Manual Controls - Crisp Geometric Buttons in Tan & Green */}
@@ -168,9 +150,9 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
 
         {/* Horizontal Motion Track across full width */}
         <div className="relative flex-1 flex items-center overflow-visible py-2">
-          <motion.div 
-            ref={trackRef} 
-            style={{ x }} 
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
             className="flex gap-5 sm:gap-6 md:gap-7 pl-4 sm:pl-8 md:pl-16 pr-24 sm:pr-36 md:pr-48 will-change-transform"
           >
             {/* Intro Lead Card - No vertical scrollbar, fits completely and cleanly */}
@@ -185,25 +167,18 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
                 <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-[#18221B] leading-snug">
                   Where I've worked & what I've learned.
                 </h3>
-                <p className="text-xs sm:text-[13px] text-[#3E4A40] leading-relaxed line-clamp-3 sm:line-clamp-4">
-                  I love being in the middle of real operations where the work actually happens. From directing commercial property books and coordinating freight logistics, to analyzing product margins and optimizing operational workflows, each role has taught me how to build reliable systems that keep teams moving forward.
+                <p className="text-xs sm:text-[13px] text-[#3E4A40] leading-relaxed line-clamp-4 sm:line-clamp-5">
+                  I love being at the center of real operations. From managing
+                  commercial property, coordinating freight, analyzing margins,
+                  and optimizing workflows, each role has taught me how to build
+                  reliable systems that keep teams moving forward.
                 </p>
               </div>
 
               <div className="pt-3 border-t border-[#1B4332]/15 space-y-2">
-                <div className="text-[10px] uppercase tracking-widest text-[#1B4332] font-bold">AT A GLANCE</div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="p-2 rounded-sm bg-[#EBE2D2]/60 border border-[#1B4332]/15">
-                    <div className="font-bold text-[#1B4332] text-xs font-serif">Hands-On Work</div>
-                    <div className="text-[#3E4A40] text-[10px] font-medium truncate">Crystal Flash & Custodial</div>
-                  </div>
-                  <div className="p-2 rounded-sm bg-[#EBE2D2]/60 border border-[#1B4332]/15">
-                    <div className="font-bold text-[#1B4332] text-xs font-serif">Analytical Ops</div>
-                    <div className="text-[#3E4A40] text-[10px] font-medium truncate">HexArmor, Steel & GFS</div>
-                  </div>
-                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs"></div>
                 <div className="flex items-center gap-1.5 text-xs text-[#1B4332] font-bold uppercase tracking-wider pt-0.5">
-                  <span>Scroll right for each role</span>
+                  <span>Scroll for each role</span>
                   <ArrowRight className="w-3 h-3" />
                 </div>
               </div>
@@ -225,7 +200,7 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 via-transparent to-transparent pointer-events-none" />
-                  
+
                   {/* Floating index & period */}
                   <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
                     <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded-sm bg-[#FAF6EF]/95 text-[#1B4332] border border-[#1B4332]/20 shadow-2xs">
@@ -234,9 +209,6 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
                   </div>
 
                   <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white z-10">
-                    <span className="text-[9px] uppercase tracking-[0.25em] text-[#D5DFD8] font-bold block">
-                      Milestone {String(index + 1).padStart(2, '0')}
-                    </span>
                     <div className="text-xs sm:text-sm font-semibold line-clamp-1 text-white/95 font-serif">
                       {item.company}
                     </div>
@@ -263,13 +235,8 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
                       {item.role}
                     </h4>
 
-                    {/* Tagline */}
-                    <p className="text-xs font-medium text-[#1B4332] italic font-serif line-clamp-1">
-                      "{item.tagline}"
-                    </p>
-
                     {/* Main narrative */}
-                    <p className="text-xs text-[#3E4A40] leading-relaxed line-clamp-2 sm:line-clamp-3">
+                    <p className="text-xs text-[#3E4A40] leading-relaxed line-clamp-4 sm:line-clamp-5">
                       {item.description}
                     </p>
 
@@ -280,7 +247,7 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
                           <Sparkles className="w-3 h-3 text-[#1B4332]" />
                           Key Impact
                         </div>
-                        <p className="text-xs text-[#18221B] line-clamp-1 sm:line-clamp-2">
+                        <p className="text-xs text-[#18221B] line-clamp-3 sm:line-clamp-4">
                           • {item.achievements[0]}
                         </p>
                       </div>
@@ -299,32 +266,21 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
                         </span>
                       ))}
                     </div>
-
-                    <button
-                      id={`view-career-${item.id}`}
-                      onClick={() => onSelectItem(item)}
-                      className="inline-flex items-center justify-center gap-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#1B4332] hover:text-[#F4EFE6] bg-[#FAF6EF] hover:bg-[#1B4332] border border-[#1B4332]/30 px-2.5 sm:px-3 py-1.5 rounded-sm transition-all shadow-2xs shrink-0 cursor-pointer"
-                    >
-                      <span>Read Story</span>
-                      <ChevronRight className="w-3 h-3" />
-                    </button>
                   </div>
                 </div>
               </div>
             ))}
 
             {/* Trailing End Spacer ensuring exact fit without overscroll */}
-            <div className="w-6 sm:w-8 shrink-0 pointer-events-none" aria-hidden="true" />
+            <div
+              className="w-6 sm:w-8 shrink-0 pointer-events-none"
+              aria-hidden="true"
+            />
           </motion.div>
         </div>
 
         {/* Bottom Step Markers - The Little Squares */}
         <div className="w-full max-w-7xl mx-auto flex items-center justify-between pt-2.5 border-t border-[#1B4332]/15 text-xs text-[#4F6355] shrink-0">
-          <div className="flex items-center gap-2 font-medium">
-            <span className="w-2 h-2 rounded-xs bg-[#1B4332]" />
-            <span>Milestone {activeStep + 1} of {items.length}</span>
-          </div>
-
           {/* The Little Squares */}
           <div className="flex items-center gap-2">
             {items.map((item, idx) => (
@@ -334,15 +290,14 @@ export const CareerHorizontalSection: React.FC<CareerHorizontalSectionProps> = (
                 aria-label={`Jump to ${item.company} (${idx + 1})`}
                 title={`${item.role} at ${item.company}`}
                 className={`h-2 transition-all duration-300 rounded-none cursor-pointer ${
-                  activeStep === idx 
-                    ? 'w-6 bg-[#1B4332]' 
-                    : 'w-2.5 bg-[#1B4332]/30 hover:bg-[#1B4332]'
+                  activeStep === idx
+                    ? "w-6 bg-[#1B4332]"
+                    : "w-2.5 bg-[#1B4332]/30 hover:bg-[#1B4332]"
                 }`}
               />
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );

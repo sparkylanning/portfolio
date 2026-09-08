@@ -1,41 +1,43 @@
-import React, { useState } from 'react';
-import { ProfileData } from '../types';
-import { 
-  Send, 
-  Check, 
-  Linkedin, 
-  ArrowUp, 
+import React, { useState } from "react";
+import { ProfileData } from "../types";
+import {
+  Send,
+  Check,
+  Linkedin,
+  ArrowUp,
   ShieldCheck,
   Mail,
   Copy,
   ExternalLink,
   Sparkles,
-  AlertCircle
-} from 'lucide-react';
+  AlertCircle,
+} from "lucide-react";
 
 interface ContactSectionProps {
   profile: ProfileData;
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
-  const targetEmail = profile.email || 'Sparkylanning@gmail.com';
+  const targetEmail = profile.email || "Sparkylanning@gmail.com";
 
   const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    organization: '',
-    subject: 'Internship / Full-Time Opportunity',
-    message: ''
+    name: "",
+    email: "",
+    organization: "",
+    subject: "Internship / Full-Time Opportunity",
+    message: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedMessage, setCopiedMessage] = useState(false);
-  const [submissionMethod, setSubmissionMethod] = useState<'endpoint' | 'mailto'>('mailto');
+  const [submissionMethod, setSubmissionMethod] = useState<
+    "endpoint" | "mailto"
+  >("mailto");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const formatMessageBody = () => {
-    return `Hello Jacob,\n\n${formState.message}\n\n---\nSender: ${formState.name}\nEmail: ${formState.email}\nOrganization: ${formState.organization || 'Not specified'}\nTopic: ${formState.subject}`;
+    return `Hello Jacob,\n\n${formState.message}\n\n---\nSender: ${formState.name}\nEmail: ${formState.email}\nOrganization: ${formState.organization || "Not specified"}\nTopic: ${formState.subject}`;
   };
 
   const getMailtoUrl = () => {
@@ -59,10 +61,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
     if (profile.formEndpoint && profile.formEndpoint.trim().length > 0) {
       try {
         const response = await fetch(profile.formEndpoint.trim(), {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            "Content-Type": "application/json",
+            Accept: "application/json",
           },
           body: JSON.stringify({
             name: formState.name,
@@ -70,25 +72,30 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
             organization: formState.organization,
             subject: formState.subject,
             message: formState.message,
-            _replyto: formState.email
-          })
+            _replyto: formState.email,
+          }),
         });
 
         if (response.ok) {
-          setSubmissionMethod('endpoint');
+          setSubmissionMethod("endpoint");
           setIsSubmitting(false);
           setSubmitted(true);
           return;
         } else {
-          console.warn('Endpoint submission returned non-200, falling back to direct email compose');
+          console.warn(
+            "Endpoint submission returned non-200, falling back to direct email compose",
+          );
         }
       } catch (err) {
-        console.warn('Endpoint submission failed, falling back to mail client:', err);
+        console.warn(
+          "Endpoint submission failed, falling back to mail client:",
+          err,
+        );
       }
     }
 
     // Default & reliable path: dispatch via mail client
-    setSubmissionMethod('mailto');
+    setSubmissionMethod("mailto");
     const mailto = getMailtoUrl();
     try {
       window.location.href = mailto;
@@ -113,24 +120,26 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
 
   const handleReset = () => {
     setFormState({
-      name: '',
-      email: '',
-      organization: '',
-      subject: 'Internship / Full-Time Opportunity',
-      message: ''
+      name: "",
+      email: "",
+      organization: "",
+      subject: "Internship / Full-Time Opportunity",
+      message: "",
     });
     setSubmitted(false);
     setErrorMessage(null);
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer id="contact" className="bg-[#FAF6EF] border-t border-[#1B4332]/20 pt-20 pb-12 px-6 sm:px-10 md:px-16">
+    <footer
+      id="contact"
+      className="bg-[#FAF6EF] border-t border-[#1B4332]/20 pt-20 pb-12 px-6 sm:px-10 md:px-16"
+    >
       <div className="max-w-3xl mx-auto space-y-12">
-        
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-6 border-b border-[#1B4332]/20">
           <div>
@@ -139,21 +148,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
               <span>Contact & Inquiries</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#18221B] tracking-tight">
-              Get in touch directly<span className="text-[#1B4332] italic">.</span>
+              Get in touch directly
+              <span className="text-[#1B4332] italic">.</span>
             </h2>
             <p className="text-sm text-[#3E4A40] mt-2 max-w-xl font-normal leading-relaxed">
-              Send a note regarding operations management, supply chain optimization, or business analytics roles.
+              Send a note regarding operations management, supply chain
+              optimization, or business analytics roles.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 self-start sm:self-end">
-            <a
-              href={`mailto:${targetEmail}`}
-              className="inline-flex items-center gap-2 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-sm bg-[#FAF6EF] text-[#1B4332] border border-[#1B4332]/30 hover:bg-[#1B4332] hover:text-[#F4EFE6] transition-colors shadow-2xs"
-            >
-              <Mail className="w-3.5 h-3.5" />
-              <span>Email</span>
-            </a>
             <a
               href={profile.linkedinUrl}
               target="_blank"
@@ -162,36 +166,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
             >
               <Linkedin className="w-3.5 h-3.5" />
               <span>LinkedIn</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Direct Email Address Info Pill */}
-        <div className="bg-[#FAF6EF] border border-[#1B4332]/25 rounded-sm p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-[#1B4332]/10 text-[#1B4332] flex items-center justify-center shrink-0">
-              <Mail className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-[10px] uppercase font-bold text-[#1B4332] tracking-wider">Direct Inbox</div>
-              <div className="font-semibold text-[#18221B] select-all">{targetEmail}</div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleCopyEmail}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-xs border border-[#1B4332]/20 hover:bg-[#1B4332]/10 text-[#1B4332] transition-colors cursor-pointer"
-            >
-              {copiedEmail ? <Check className="w-3 h-3 text-emerald-700" /> : <Copy className="w-3 h-3" />}
-              <span>{copiedEmail ? 'Copied' : 'Copy Email'}</span>
-            </button>
-            <a
-              href={`mailto:${targetEmail}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-xs bg-[#1B4332] text-[#F4EFE6] hover:bg-[#2D6A4F] transition-colors"
-            >
-              <ExternalLink className="w-3 h-3" />
-              <span>Compose</span>
             </a>
           </div>
         </div>
@@ -206,46 +180,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
 
               <div>
                 <h3 className="text-2xl font-serif font-bold text-[#18221B]">
-                  {submissionMethod === 'endpoint' ? 'Message Delivered Successfully' : 'Message Ready to Send'}
+                  {submissionMethod === "endpoint"
+                    ? "Message Delivered Successfully"
+                    : "Message Ready to Send"}
                 </h3>
                 <p className="text-sm text-[#3E4A40] max-w-md mx-auto mt-2 leading-relaxed">
-                  Thank you, <span className="font-semibold text-[#18221B]">{formState.name}</span>! Your message is addressed directly to{' '}
-                  <span className="font-semibold text-[#1B4332] underline">{targetEmail}</span>.
+                  Thank you,{" "}
+                  <span className="font-semibold text-[#18221B]">
+                    {formState.name}
+                  </span>
+                  ! Your message is addressed directly to Jacob Lanning.
                 </p>
-              </div>
-
-              {/* Action buttons for guarantee of delivery */}
-              <div className="bg-[#FAF6EF] p-4 rounded-sm border border-[#1B4332]/20 max-w-lg mx-auto space-y-3 text-left">
-                <div className="text-[11px] uppercase tracking-wider font-bold text-[#1B4332]">
-                  Send via your preferred client:
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <a
-                    href={getGmailWebUrl()}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm bg-[#1B4332] text-[#F4EFE6] hover:bg-[#2D6A4F] transition-colors shadow-2xs"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>Open in Gmail (Web)</span>
-                  </a>
-
-                  <a
-                    href={getMailtoUrl()}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm bg-[#FAF6EF] text-[#1B4332] border border-[#1B4332]/30 hover:bg-[#1B4332]/10 transition-colors"
-                  >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>Launch Mail App</span>
-                  </a>
-
-                  <button
-                    onClick={handleCopyMessage}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm border border-[#1B4332]/30 hover:bg-[#1B4332]/10 text-[#1B4332] transition-colors cursor-pointer"
-                  >
-                    {copiedMessage ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copiedMessage ? 'Message Copied!' : 'Copy Text'}</span>
-                  </button>
-                </div>
               </div>
 
               <div className="pt-3">
@@ -262,7 +207,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Name */}
                 <div className="space-y-1.5">
-                  <label 
+                  <label
                     htmlFor="contact-name"
                     className="block text-xs font-bold uppercase tracking-wider text-[#18221B]"
                   >
@@ -273,7 +218,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     type="text"
                     required
                     value={formState.name}
-                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormState({ ...formState, name: e.target.value })
+                    }
                     placeholder="e.g. Sarah Jenkins"
                     className="w-full px-3.5 py-2.5 text-sm rounded-sm bg-[#FAF6EF] border border-[#1B4332]/25 text-[#18221B] placeholder-[#4F6355]/50 focus:outline-hidden focus:border-[#1B4332] focus:ring-1 focus:ring-[#1B4332] transition-colors"
                   />
@@ -281,7 +228,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
 
                 {/* Sender's Email */}
                 <div className="space-y-1.5">
-                  <label 
+                  <label
                     htmlFor="contact-email"
                     className="block text-xs font-bold uppercase tracking-wider text-[#18221B]"
                   >
@@ -292,7 +239,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     type="email"
                     required
                     value={formState.email}
-                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    onChange={(e) =>
+                      setFormState({ ...formState, email: e.target.value })
+                    }
                     placeholder="e.g. sarah@company.com"
                     className="w-full px-3.5 py-2.5 text-sm rounded-sm bg-[#FAF6EF] border border-[#1B4332]/25 text-[#18221B] placeholder-[#4F6355]/50 focus:outline-hidden focus:border-[#1B4332] focus:ring-1 focus:ring-[#1B4332] transition-colors"
                   />
@@ -302,7 +251,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Organization */}
                 <div className="space-y-1.5">
-                  <label 
+                  <label
                     htmlFor="contact-org"
                     className="block text-xs font-bold uppercase tracking-wider text-[#18221B]"
                   >
@@ -312,7 +261,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     id="contact-org"
                     type="text"
                     value={formState.organization}
-                    onChange={(e) => setFormState({ ...formState, organization: e.target.value })}
+                    onChange={(e) =>
+                      setFormState({
+                        ...formState,
+                        organization: e.target.value,
+                      })
+                    }
                     placeholder="e.g. Supply Chain Group"
                     className="w-full px-3.5 py-2.5 text-sm rounded-sm bg-[#FAF6EF] border border-[#1B4332]/25 text-[#18221B] placeholder-[#4F6355]/50 focus:outline-hidden focus:border-[#1B4332] focus:ring-1 focus:ring-[#1B4332] transition-colors"
                   />
@@ -320,7 +274,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
 
                 {/* Topic / Subject */}
                 <div className="space-y-1.5">
-                  <label 
+                  <label
                     htmlFor="contact-subject"
                     className="block text-xs font-bold uppercase tracking-wider text-[#18221B]"
                   >
@@ -329,20 +283,30 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                   <select
                     id="contact-subject"
                     value={formState.subject}
-                    onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                    onChange={(e) =>
+                      setFormState({ ...formState, subject: e.target.value })
+                    }
                     className="w-full px-3.5 py-2.5 text-sm rounded-sm bg-[#FAF6EF] border border-[#1B4332]/25 text-[#18221B] focus:outline-hidden focus:border-[#1B4332] focus:ring-1 focus:ring-[#1B4332] transition-colors"
                   >
-                    <option value="Internship / Full-Time Opportunity">Internship / Full-Time Opportunity</option>
-                    <option value="Supply Chain Collaboration">Supply Chain Project / Collaboration</option>
-                    <option value="Quantitative Analytics Inquiry">Quantitative Analytics Inquiry</option>
-                    <option value="General Professional Connection">General Professional Connection</option>
+                    <option value="Internship / Full-Time Opportunity">
+                      Internship / Full-Time Opportunity
+                    </option>
+                    <option value="Supply Chain Collaboration">
+                      Supply Chain Project / Collaboration
+                    </option>
+                    <option value="Quantitative Analytics Inquiry">
+                      Quantitative Analytics Inquiry
+                    </option>
+                    <option value="General Professional Connection">
+                      General Professional Connection
+                    </option>
                   </select>
                 </div>
               </div>
 
               {/* Message */}
               <div className="space-y-1.5">
-                <label 
+                <label
                   htmlFor="contact-message"
                   className="block text-xs font-bold uppercase tracking-wider text-[#18221B]"
                 >
@@ -353,7 +317,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                   required
                   rows={4}
                   value={formState.message}
-                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  onChange={(e) =>
+                    setFormState({ ...formState, message: e.target.value })
+                  }
                   placeholder="Describe the opportunity, project context, or question..."
                   className="w-full px-3.5 py-2.5 text-sm rounded-sm bg-[#FAF6EF] border border-[#1B4332]/25 text-[#18221B] placeholder-[#4F6355]/50 focus:outline-hidden focus:border-[#1B4332] focus:ring-1 focus:ring-[#1B4332] transition-colors"
                 />
@@ -363,7 +329,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
               <div className="pt-2 flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-xs text-[#4F6355]">
                   <ShieldCheck className="w-4 h-4 text-[#1B4332]" />
-                  <span>Delivers directly to {targetEmail}</span>
+                  <span>Delivers directly to Jacob Lanning's inbox</span>
                 </div>
 
                 <button
@@ -391,7 +357,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
           <div className="font-serif italic text-[#18221B]">
             Jacob Lanning &bull; Calvin University Class of 2027
           </div>
-          
+
           <button
             onClick={scrollToTop}
             className="flex items-center gap-1.5 hover:text-[#1B4332] transition-colors uppercase font-bold text-[11px] tracking-wider cursor-pointer"
@@ -400,7 +366,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
             <ArrowUp className="w-3.5 h-3.5" />
           </button>
         </div>
-
       </div>
     </footer>
   );

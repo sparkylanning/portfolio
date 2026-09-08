@@ -1,26 +1,25 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useMotionValue } from 'motion/react';
-import { ProjectItem } from '../types';
-import { 
-  FolderGit2, 
-  Building2, 
-  Calendar, 
-  ChevronRight, 
-  ChevronLeft, 
-  ArrowRight, 
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useMotionValue } from "motion/react";
+import { ProjectItem } from "../types";
+import {
+  FolderGit2,
+  Building2,
+  Calendar,
+  ChevronRight,
+  ChevronLeft,
+  ArrowRight,
   Sparkles,
-  Layers
-} from 'lucide-react';
+  Layers,
+} from "lucide-react";
 
 interface ProjectsHorizontalSectionProps {
   projects: ProjectItem[];
   onSelectProject?: (project: ProjectItem) => void;
 }
 
-export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps> = ({
-  projects,
-  onSelectProject,
-}) => {
+export const ProjectsHorizontalSection: React.FC<
+  ProjectsHorizontalSectionProps
+> = ({ projects, onSelectProject }) => {
   const targetRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [scrollRange, setScrollRange] = useState<number>(0);
@@ -36,7 +35,7 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
   // Monitor scroll within the container
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ['start start', 'end end'],
+    offset: ["start start", "end end"],
   });
 
   // Calculate dynamic pixel transform based on actual track width and parent container
@@ -52,39 +51,22 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
     };
 
     updateScrollRange();
-    window.addEventListener('resize', updateScrollRange);
-    return () => window.removeEventListener('resize', updateScrollRange);
+    window.addEventListener("resize", updateScrollRange);
+    return () => window.removeEventListener("resize", updateScrollRange);
   }, [projects]);
 
   // Track scroll changes:
   // When scrolling DOWN: standard smooth 1:1 progression across all cards.
   // When scrolling UP after having passed the section: accelerate horizontal scroll 2.5x so cards zip past quickly.
+
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
-      const currentY = window.scrollY;
-      const isScrollingUp = currentY < lastScrollYRef.current;
-      lastScrollYRef.current = currentY;
-
-      // Mark if user scrolled past the section
-      if (latest >= 0.94) {
-        hasPassedSectionRef.current = true;
-      } else if (latest <= 0.05) {
-        hasPassedSectionRef.current = false;
-      }
-
-      if (hasPassedSectionRef.current && isScrollingUp) {
-        // Scrolling UP after having passed: accelerate sideways motion so it finishes in the first ~35% of upward scroll
-        const acceleratedProgress = Math.max(0, Math.min(1, (latest - 0.65) / 0.35));
-        x.set(-acceleratedProgress * scrollRange);
-      } else {
-        // Normal smooth progression
-        x.set(-latest * scrollRange);
-      }
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      x.set(-latest * scrollRange);
 
       const normalized = Math.max(0, Math.min(1, latest));
       const step = Math.min(
         projects.length - 1,
-        Math.floor(normalized * projects.length)
+        Math.floor(normalized * projects.length),
       );
       setActiveStep(step);
     });
@@ -98,7 +80,7 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
     const containerHeight = targetRef.current.offsetHeight - window.innerHeight;
     const targetProgress = index / Math.max(1, projects.length - 1);
     const targetScroll = containerTop + targetProgress * containerHeight;
-    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    window.scrollTo({ top: targetScroll, behavior: "smooth" });
   };
 
   const handlePrev = () => {
@@ -112,15 +94,14 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
   };
 
   return (
-    <section 
-      id="projects" 
-      ref={targetRef} 
+    <section
+      id="projects"
+      ref={targetRef}
       className="relative bg-[#FAF6EF] border-t border-[#1B4332]/20"
-      style={{ height: `${(projects.length + 1) * 26 + 30}vh` }}
+      style={{ height: `${(projects.length + 1) * 150 + 30}vh` }}
     >
       {/* Full-viewport sticky deck: covers 100% of the screen seamlessly with no gaps */}
       <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden flex flex-col justify-between pt-16 sm:pt-20 pb-4 sm:pb-6 px-4 sm:px-8 md:px-12 lg:px-16 bg-[#FAF6EF] border-b border-[#1B4332]/20">
-        
         {/* Top Header Bar with Geometric Balance design header */}
         <div className="w-full max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-2.5 border-b border-[#1B4332]/15 shrink-0">
           <div>
@@ -137,7 +118,9 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
             {/* Scroll Indicator */}
             <div className="hidden lg:flex items-center gap-2 text-xs text-[#1B4332] font-semibold">
               <div className="h-[1px] w-10 bg-[#1B4332]" />
-              <span className="text-xs italic font-serif">Scroll down to advance horizontally &rarr;</span>
+              <span className="text-xs italic font-serif">
+                Scroll down to advance horizontally &rarr;
+              </span>
             </div>
 
             {/* Manual Controls - The same crisp buttons */}
@@ -166,9 +149,9 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
 
         {/* Horizontal Motion Track across full width */}
         <div className="relative flex-1 flex items-center overflow-visible py-2">
-          <motion.div 
-            ref={trackRef} 
-            style={{ x }} 
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
             className="flex gap-5 sm:gap-6 md:gap-7 pl-4 sm:pl-8 md:pl-16 pr-24 sm:pr-36 md:pr-48 will-change-transform"
           >
             {/* Intro Lead Card - Fits completely, no internal scrollbar */}
@@ -183,29 +166,18 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
                 <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-[#18221B] leading-snug">
                   Hands-on projects & practical tools.
                 </h3>
-                <p className="text-xs sm:text-[13px] text-[#3E4A40] leading-relaxed line-clamp-3 sm:line-clamp-4">
-                  Here are projects where I tackled real operational challenges: from developing spreadsheet decision models and optimizing freight logistics, to tracking property cash flows, engineering standard operating procedures, and building visual dashboards.
+                <p className="text-xs sm:text-[13px] text-[#3E4A40] leading-relaxed line-clamp-5 sm:line-clamp-6">
+                  Here are projects where I tackled real operational challenges:
+                  from developing spreadsheet decision models and optimizing
+                  freight logistics, to tracking property cash flows,
+                  engineering standard operating procedures, and building visual
+                  dashboards.
                 </p>
               </div>
 
               <div className="pt-3 border-t border-[#1B4332]/15 space-y-2">
-                <div className="text-[10px] uppercase tracking-widest text-[#1B4332] font-bold">WHAT I ENJOY BUILDING</div>
-                <div className="flex flex-wrap gap-1 text-xs">
-                  <span className="px-2 py-0.5 rounded-sm bg-[#FAF6EF] text-[#1B4332] text-[10px] font-semibold border border-[#1B4332]/15">
-                    Process Optimization
-                  </span>
-                  <span className="px-2 py-0.5 rounded-sm bg-[#FAF6EF] text-[#1B4332] text-[10px] font-semibold border border-[#1B4332]/15">
-                    Decision Models
-                  </span>
-                  <span className="px-2 py-0.5 rounded-sm bg-[#FAF6EF] text-[#1B4332] text-[10px] font-semibold border border-[#1B4332]/15">
-                    Property Accounting
-                  </span>
-                  <span className="px-2 py-0.5 rounded-sm bg-[#FAF6EF] text-[#1B4332] text-[10px] font-semibold border border-[#1B4332]/15">
-                    Invoice Audits
-                  </span>
-                </div>
                 <div className="flex items-center gap-1.5 text-xs text-[#1B4332] font-bold uppercase tracking-wider pt-0.5">
-                  <span>Scroll right to view projects</span>
+                  <span>Scroll to view projects</span>
                   <ArrowRight className="w-3 h-3" />
                 </div>
               </div>
@@ -227,7 +199,7 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 via-transparent to-transparent pointer-events-none" />
-                  
+
                   {/* Category & Period pill */}
                   <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
                     <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded-sm bg-[#FAF6EF]/95 text-[#1B4332] border border-[#1B4332]/20 shadow-2xs">
@@ -236,9 +208,6 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
                   </div>
 
                   <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white z-10">
-                    <span className="text-[9px] uppercase tracking-[0.25em] text-[#D5DFD8] font-bold block">
-                      Project {String(index + 1).padStart(2, '0')}
-                    </span>
                     <div className="text-xs sm:text-sm font-semibold text-white/95 font-serif line-clamp-1">
                       {project.title}
                     </div>
@@ -265,11 +234,7 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
                       {project.title}
                     </h4>
 
-                    <p className="text-xs font-medium text-[#1B4332] italic font-serif line-clamp-1">
-                      "{project.tagline}"
-                    </p>
-
-                    <p className="text-xs text-[#3E4A40] leading-relaxed line-clamp-2 sm:line-clamp-3">
+                    <p className="text-xs text-[#3E4A40] leading-relaxed line-clamp-4 sm:line-clamp-5">
                       {project.description}
                     </p>
 
@@ -298,34 +263,21 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
                         </span>
                       ))}
                     </div>
-
-                    {onSelectProject && (
-                      <button
-                        id={`view-project-${project.id}`}
-                        onClick={() => onSelectProject(project)}
-                        className="inline-flex items-center justify-center gap-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#1B4332] hover:text-[#F4EFE6] bg-[#FAF6EF] hover:bg-[#1B4332] border border-[#1B4332]/30 px-2.5 sm:px-3 py-1.5 rounded-sm transition-all shadow-2xs shrink-0 cursor-pointer"
-                      >
-                        <span>Details</span>
-                        <ChevronRight className="w-3 h-3" />
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
             ))}
 
             {/* Trailing End Spacer ensuring exact fit without overscroll */}
-            <div className="w-6 sm:w-8 shrink-0 pointer-events-none" aria-hidden="true" />
+            <div
+              className="w-6 sm:w-8 shrink-0 pointer-events-none"
+              aria-hidden="true"
+            />
           </motion.div>
         </div>
 
         {/* Bottom Status Bar with The Little Squares */}
         <div className="w-full max-w-7xl mx-auto flex items-center justify-between pt-2.5 border-t border-[#1B4332]/15 text-xs text-[#4F6355] shrink-0">
-          <div className="flex items-center gap-2 font-medium">
-            <span className="w-2 h-2 rounded-xs bg-[#1B4332]" />
-            <span>Project {activeStep + 1} of {projects.length}</span>
-          </div>
-          
           {/* The Little Squares */}
           <div className="flex items-center gap-2">
             {projects.map((project, idx) => (
@@ -335,15 +287,14 @@ export const ProjectsHorizontalSection: React.FC<ProjectsHorizontalSectionProps>
                 aria-label={`Jump to ${project.title} (${idx + 1})`}
                 title={project.title}
                 className={`h-2 transition-all duration-300 rounded-none cursor-pointer ${
-                  activeStep === idx 
-                    ? 'w-6 bg-[#1B4332]' 
-                    : 'w-2.5 bg-[#1B4332]/30 hover:bg-[#1B4332]'
+                  activeStep === idx
+                    ? "w-6 bg-[#1B4332]"
+                    : "w-2.5 bg-[#1B4332]/30 hover:bg-[#1B4332]"
                 }`}
               />
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );
