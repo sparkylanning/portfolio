@@ -3,9 +3,9 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import teamPhoto from '../assets/images/DiscGolfTeam.jpg';
 import coursePhoto from '../assets/images/discGolfCourseInstall.jpeg';
-import freshmenPhoto from '../assets/images/presentation/freshmen.jpg';
-import actionPhoto from '../assets/images/presentation/action.jpg';
-import walkingPhoto from '../assets/images/presentation/walking.jpg';
+import freshmenPhoto from '../assets/images/presentation/freshman.jpg';
+import actionPhoto from '../assets/images/presentation/action.png';
+import walkingPhoto from '../assets/images/presentation/walking.png';
 import teamFourPhoto from '../assets/images/presentation/team-four.jpg';
 import './DiscGolfPresentation.css';
 
