@@ -7,6 +7,7 @@ import freshmenPhoto from '../assets/images/presentation/freshman.jpg';
 import actionPhoto from '../assets/images/presentation/action.png';
 import walkingPhoto from '../assets/images/presentation/walking.png';
 import teamFourPhoto from '../assets/images/presentation/team-four.jpg';
+import finalPhoto from '../assets/images/presentation/final.jpg';
 import './DiscGolfPresentation.css';
 
 /** A presenter-controlled story: no auto-advance, so Jacob sets the pace. */
@@ -64,8 +65,8 @@ const chapters = [
     title: 'An idea matters when you follow through.',
     body: 'Starting the club taught me how to get people on board. Leading a team taught me how to keep them engaged. Building the course taught me how to turn a plan into something people can actually use.',
     detail: 'Build community. Organize people. Make it real.',
-    image: coursePhoto,
-    alt: 'New disc golf basket installed for the campus course',
+    image: finalPhoto,
+    alt: 'Calvin disc golf teammates together on a sunny course',
   },
 ];
 
