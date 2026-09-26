@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
-import teamPhoto from '../assets/images/presentation/team.jpg';
-import coursePhoto from '../assets/images/presentation/course.jpg';
+import teamPhoto from '../assets/images/DiscGolfTeam.jpg';
+import coursePhoto from '../assets/images/discGolfCourseInstall.jpeg';
 import './DiscGolfPresentation.css';
 
 /** A presenter-controlled story: no auto-advance, so Jacob sets the pace. */
