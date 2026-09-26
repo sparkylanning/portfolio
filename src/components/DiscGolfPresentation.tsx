@@ -3,54 +3,61 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import teamPhoto from '../assets/images/DiscGolfTeam.jpg';
 import coursePhoto from '../assets/images/discGolfCourseInstall.jpeg';
+import freshmenPhoto from '../assets/images/presentation/freshmen.jpg';
+import actionPhoto from '../assets/images/presentation/action.jpg';
+import walkingPhoto from '../assets/images/presentation/walking.jpg';
+import teamFourPhoto from '../assets/images/presentation/team-four.jpg';
 import './DiscGolfPresentation.css';
 
 /** A presenter-controlled story: no auto-advance, so Jacob sets the pace. */
 const chapters = [
   {
     eyebrow: 'A story of impact · Calvin University',
-    title: 'I started with a disc and an idea.',
+    title: 'I loved disc golf, and I knew others did too.',
     body: 'I love disc golf because it gets people outside and brings them together. At Calvin, I saw the chance to build that kind of community from scratch.',
     detail: 'Jacob Lanning  /  Calvin Disc Golf',
-    image: teamPhoto,
-    alt: 'Members of the Calvin disc golf team together outdoors',
-    motif: '01',
+    image: actionPhoto,
+    alt: 'Calvin disc golf player mid-throw on a grassy course',
   },
   {
-    eyebrow: '01 / Make it real',
+    eyebrow: 'Make it real',
     title: 'First, we needed a club.',
     body: 'I took the idea to the school, worked through the approval process, and began bringing students together. The goal was simple: a place to play, meet people, and feel part of something.',
     detail: 'From proposal to an approved student group',
-    image: undefined,
-    alt: '',
-    motif: '02',
+    image: teamFourPhoto,
+    alt: 'Four Calvin disc golf teammates in jerseys with their disc bags',
   },
   {
-    eyebrow: '02 / Bring people in',
+    eyebrow: 'Bring people in',
     title: 'A club is the people who show up.',
     body: 'I found teammates, organized rounds and events, and helped turn a recreational idea into a club sport. We built a team that could welcome beginners and also compete.',
     detail: 'Community first. Competition followed.',
-    image: teamPhoto,
-    alt: 'Calvin disc golf teammates posing after a round',
-    motif: '03',
+    image: walkingPhoto,
+    alt: 'Calvin disc golf team walking together toward a wooded course',
   },
   {
-    eyebrow: '03 / Go further',
+    eyebrow: 'Go further',
     title: 'Then we went to nationals. Twice.',
     body: 'I helped handle fundraising, tournament logistics, and road trips. We competed against schools far larger than Calvin, but we showed up as a team we had built ourselves.',
     detail: '2 collegiate national championships',
     image: teamPhoto,
     alt: 'Calvin disc golf team wearing its team jerseys',
-    motif: '04',
   },
   {
-    eyebrow: '04 / Leave something behind',
+    eyebrow: 'Leave something behind',
     title: 'The impact stayed on campus.',
     body: 'For a project management class, I saw a problem with the campus course and helped turn the idea of fixing it into a real project. Working with the disc golf community at Calvin, we designed, installed, and launched a new nine-hole course.',
     detail: 'A new 9-hole course for students to use',
     image: coursePhoto,
     alt: 'Two people standing beside a newly installed disc golf basket on campus',
-    motif: '05',
+  },
+  {
+    eyebrow: 'Pass it on',
+    title: 'The next leaders are already here.',
+    body: 'I am training freshmen to lead the club in the years ahead. I want them to own it, bring in the next group of students, and keep building what we started.',
+    detail: 'A team that lasts beyond my time at Calvin',
+    image: freshmenPhoto,
+    alt: 'Four Calvin disc golf teammates in jerseys on a wooded course',
   },
   {
     eyebrow: 'What I learned',
@@ -59,7 +66,6 @@ const chapters = [
     detail: 'Build community. Organize people. Make it real.',
     image: coursePhoto,
     alt: 'New disc golf basket installed for the campus course',
-    motif: '06',
   },
 ];
 
@@ -109,10 +115,10 @@ export default function DiscGolfPresentation() {
           <motion.article
             key={index}
             custom={direction}
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: direction * 110, rotate: direction * 8, scale: 0.94 }}
-            animate={{ opacity: 1, x: 0, rotate: 0, scale: 1 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: direction * -110, rotate: direction * -8, scale: 0.94 }}
-            transition={{ duration: reduceMotion ? 0.12 : 0.55, ease: [0.22, 1, 0.36, 1] }}
+            initial={reduceMotion ? false : { opacity: 0.72, rotateY: direction * 360, scale: 0.96 }}
+            animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0.72, rotateY: direction * -360, scale: 0.96 }}
+            transition={{ duration: reduceMotion ? 0.12 : 0.82, ease: [0.45, 0, 0.2, 1] }}
             className={`dg-card ${chapter.image ? 'dg-card-with-photo' : 'dg-card-text'}`}
           >
             <div className="dg-copy">
@@ -122,12 +128,11 @@ export default function DiscGolfPresentation() {
               <div className="dg-footnote"><span className="dg-footline" />{chapter.detail}</div>
             </div>
             {chapter.image ? <div className="dg-image"><img src={chapter.image} alt={chapter.alt} /></div> : <div className="dg-graphic" aria-hidden="true"><span>MAKE<br/>IT<br/>REAL<span className="dg-punctuation">.</span></span><i /></div>}
-            <span className="dg-watermark" aria-hidden="true">{chapter.motif}</span>
           </motion.article>
         </AnimatePresence>
       </div>
       <footer className="dg-controls">
-        <div className="dg-counter"><strong>{String(index + 1).padStart(2, '0')}</strong><span> / {String(chapters.length).padStart(2, '0')}</span></div>
+        <span className="dg-control-label">Calvin disc golf</span>
         <div className="dg-chapters" aria-label="Choose a slide">{chapters.map((_, i) => <button key={i} type="button" className={index === i ? 'selected' : ''} aria-label={`Slide ${i + 1}: ${chapters[i].title}`} aria-current={index === i ? 'step' : undefined} onClick={() => go(i)} />)}</div>
         <div className="dg-arrows"><button type="button" aria-label="Previous slide" disabled={index === 0} onClick={() => go(index - 1)}><ArrowLeft size={18}/></button><button type="button" aria-label="Next slide" disabled={index === chapters.length - 1} onClick={() => go(index + 1)}><ArrowRight size={18}/></button></div>
       </footer>
