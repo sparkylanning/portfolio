@@ -112,14 +112,19 @@ export default function DiscGolfPresentation() {
       </header>
       <div className="dg-stage" aria-live="polite" aria-atomic="true">
         <div className="dg-track" aria-hidden="true"><span style={{ width: `${((index + 1) / chapters.length) * 100}%` }} /></div>
-        <AnimatePresence mode="wait" custom={direction}>
+        <AnimatePresence mode="wait" custom={direction} initial={false}>
           <motion.article
             key={index}
             custom={direction}
-            initial={reduceMotion ? false : { opacity: 0.72, rotateY: direction * 360, scale: 0.96 }}
-            animate={{ opacity: 1, rotateY: 0, scale: 1 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0.72, rotateY: direction * -360, scale: 0.96 }}
-            transition={{ duration: reduceMotion ? 0.12 : 0.82, ease: [0.45, 0, 0.2, 1] }}
+            variants={{
+              enter: (travel: number) => reduceMotion ? { opacity: 0 } : { opacity: 0, x: travel * 110 },
+              center: { opacity: 1, x: 0 },
+              leave: (travel: number) => reduceMotion ? { opacity: 0 } : { opacity: 0, x: travel * -110 },
+            }}
+            initial="enter"
+            animate="center"
+            exit="leave"
+            transition={{ duration: reduceMotion ? 0.12 : 0.52, ease: [0.25, 0.8, 0.25, 1] }}
             className={`dg-card ${chapter.image ? 'dg-card-with-photo' : 'dg-card-text'}`}
           >
             <div className="dg-copy">
