@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/calvin-disc-golf", "destination": "/index.html" }
+  ]
+}
