@@ -78,6 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right: Clean minimal action buttons (No cluttering tabs) */}
         <div className="flex items-center gap-2 sm:gap-2.5">
+          <a href="/calvin-disc-golf" className="text-[10px] sm:text-xs font-semibold text-[#1B4332] hover:underline px-2 py-2">Disc golf story</a>
           {/* Download Resume button if uploaded */}
           {profile.resumeUrl && (
             <a
